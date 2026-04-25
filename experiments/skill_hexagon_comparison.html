@@ -1,0 +1,544 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Skill Hexagon Comparison</title>
+  <style>
+    :root {
+      --bg: #f6efe4;
+      --panel: rgba(255, 252, 247, 0.88);
+      --text: #16212a;
+      --muted: #5f6d78;
+      --line: rgba(22, 33, 42, 0.14);
+      --you: #0f7b74;
+      --prod: #346ea1;
+      --hybrid: #cf5937;
+      --shadow: 0 24px 64px rgba(22, 33, 42, 0.12);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--text);
+      font-family: "Avenir Next", "Trebuchet MS", "Gill Sans", sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(15, 123, 116, 0.10), transparent 28%),
+        radial-gradient(circle at top right, rgba(207, 89, 55, 0.13), transparent 34%),
+        linear-gradient(180deg, #fcf8f0 0%, #efe6d7 100%);
+    }
+
+    .shell {
+      max-width: 1380px;
+      margin: 0 auto;
+      padding: 28px 22px 34px;
+    }
+
+    .hero,
+    .content {
+      display: grid;
+      gap: 18px;
+    }
+
+    .hero {
+      grid-template-columns: 1.35fr 0.85fr;
+      margin-bottom: 18px;
+    }
+
+    .content {
+      grid-template-columns: minmax(0, 1.5fr) minmax(320px, 0.8fr);
+      align-items: start;
+    }
+
+    .card {
+      background: var(--panel);
+      border: 1px solid rgba(22, 33, 42, 0.08);
+      border-radius: 26px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(10px);
+    }
+
+    .hero-main {
+      padding: 28px 30px;
+    }
+
+    .hero-main h1 {
+      margin: 0 0 10px;
+      font-family: "Baskerville", "Palatino Linotype", serif;
+      font-size: clamp(2rem, 3vw, 3.15rem);
+      line-height: 0.96;
+      letter-spacing: -0.03em;
+    }
+
+    .hero-main p,
+    .hero-side p,
+    .note,
+    .metric span,
+    .insight li {
+      color: var(--muted);
+      line-height: 1.56;
+    }
+
+    .hero-side {
+      padding: 22px 24px;
+      display: grid;
+      gap: 12px;
+    }
+
+    .eyebrow {
+      margin: 0;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: var(--muted);
+    }
+
+    .hero-side strong {
+      font-size: 1.28rem;
+      line-height: 1.2;
+    }
+
+    .chart-card {
+      padding: 16px;
+      overflow: hidden;
+    }
+
+    svg {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    .grid-ring {
+      fill: none;
+      stroke: var(--line);
+      stroke-width: 1.2;
+    }
+
+    .axis-line {
+      stroke: rgba(22, 33, 42, 0.18);
+      stroke-width: 1.25;
+    }
+
+    .axis-label {
+      font-size: 13px;
+      font-weight: 700;
+      fill: rgba(22, 33, 42, 0.90);
+      text-anchor: middle;
+    }
+
+    .axis-sub {
+      font-size: 11px;
+      fill: rgba(95, 109, 120, 0.96);
+      text-anchor: middle;
+    }
+
+    .ring-value {
+      font-size: 10px;
+      fill: rgba(95, 109, 120, 0.9);
+    }
+
+    .profile-fill {
+      stroke-width: 3;
+      stroke-linejoin: round;
+      fill-opacity: 0.12;
+    }
+
+    .profile-point {
+      stroke: white;
+      stroke-width: 2;
+    }
+
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      padding: 8px 8px 0;
+    }
+
+    .legend button {
+      appearance: none;
+      border: 1px solid rgba(22, 33, 42, 0.12);
+      background: rgba(255, 255, 255, 0.7);
+      color: var(--text);
+      border-radius: 999px;
+      padding: 10px 14px;
+      font: inherit;
+      cursor: pointer;
+      transition: background 140ms ease, border-color 140ms ease, opacity 140ms ease;
+    }
+
+    .legend button.off {
+      opacity: 0.42;
+    }
+
+    .legend-swatch {
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      border-radius: 999px;
+      margin-right: 8px;
+    }
+
+    .side {
+      padding: 22px 20px;
+      display: grid;
+      gap: 18px;
+      position: sticky;
+      top: 18px;
+    }
+
+    .metric-grid {
+      display: grid;
+      gap: 12px;
+    }
+
+    .metric {
+      border: 1px solid rgba(22, 33, 42, 0.08);
+      background: rgba(255, 255, 255, 0.66);
+      border-radius: 18px;
+      padding: 14px;
+    }
+
+    .metric strong {
+      display: block;
+      margin-bottom: 5px;
+      font-size: 0.98rem;
+    }
+
+    .insight {
+      margin: 0;
+      padding-left: 18px;
+    }
+
+    .insight li + li {
+      margin-top: 8px;
+    }
+
+    .score-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.94rem;
+    }
+
+    .score-table th,
+    .score-table td {
+      padding: 8px 6px;
+      border-bottom: 1px solid rgba(22, 33, 42, 0.08);
+      text-align: left;
+    }
+
+    .score-table th {
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+    }
+
+    .score-table td:last-child,
+    .score-table th:last-child {
+      text-align: right;
+    }
+
+    .table-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 999px;
+    }
+
+    @media (max-width: 1100px) {
+      .hero,
+      .content {
+        grid-template-columns: 1fr;
+      }
+
+      .side {
+        position: static;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .shell {
+        padding: 18px 14px 24px;
+      }
+
+      .card {
+        border-radius: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <section class="hero">
+      <div class="card hero-main">
+        <h1>Hexagon of market value, not just skill.</h1>
+        <p>
+          This chart compares three profiles on the same six axes: <strong>you now</strong>,
+          <strong>a strong AI-in-production builder</strong>, and the
+          <strong>highest-value hybrid</strong> that combines both. The goal is not to say one
+          person is "better" overall. It’s to show where the market pays a premium: the overlap
+          between structured knowledge depth and production AI capability.
+        </p>
+      </div>
+      <div class="card hero-side">
+        <p class="eyebrow">Core takeaway</p>
+        <strong>Your semantic profile is already rare. The comp unlock comes from combining it with evals, orchestration, and production delivery.</strong>
+        <p>
+          In other words: do not abandon the ontology/KG side. Add the missing production-AI half.
+        </p>
+      </div>
+    </section>
+
+    <section class="content">
+      <div class="card chart-card">
+        <div class="legend" id="legend"></div>
+        <svg id="hexagonChart" viewBox="0 0 860 760" aria-label="Hexagon comparison of skills">
+          <g id="grid"></g>
+          <g id="profiles"></g>
+          <g id="labels"></g>
+        </svg>
+      </div>
+
+      <aside class="card side">
+        <div>
+          <p class="eyebrow">What the shapes mean</p>
+          <div class="metric-grid">
+            <div class="metric">
+              <strong>You now</strong>
+              <span>High structure, high conceptual depth, lower production leverage than your upside allows.</span>
+            </div>
+            <div class="metric">
+              <strong>AI in production person</strong>
+              <span>Strong shipping ability, but often lacks the semantic and modeling depth that creates long-term moat.</span>
+            </div>
+            <div class="metric">
+              <strong>Highest-value hybrid</strong>
+              <span>The premium profile: enough semantics to structure reality, enough production AI to make it useful at scale.</span>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <p class="eyebrow">Interpretation</p>
+          <ul class="insight">
+            <li>Your strongest edge is not generic AI ability. It is structured intelligence.</li>
+            <li>The production operator’s advantage is speed, deployment, evals, and operational trust.</li>
+            <li>The market pays most when both shapes overlap into one person.</li>
+          </ul>
+        </div>
+
+        <div>
+          <p class="eyebrow">Axis scores</p>
+          <table class="score-table" id="scoreTable"></table>
+        </div>
+      </aside>
+    </section>
+  </div>
+
+  <script>
+    const profiles = [
+      {
+        id: "you",
+        label: "You now",
+        color: getComputedStyle(document.documentElement).getPropertyValue("--you").trim(),
+        values: [94, 92, 88, 54, 46, 50]
+      },
+      {
+        id: "prod",
+        label: "AI in production",
+        color: getComputedStyle(document.documentElement).getPropertyValue("--prod").trim(),
+        values: [38, 42, 72, 91, 88, 93]
+      },
+      {
+        id: "hybrid",
+        label: "Highest-value hybrid",
+        color: getComputedStyle(document.documentElement).getPropertyValue("--hybrid").trim(),
+        values: [86, 84, 85, 87, 91, 88]
+      }
+    ];
+
+    const axes = [
+      { label: "Structured knowledge", sub: "ontology, graphs, semantic rigor" },
+      { label: "Domain modeling", sub: "formalizing real systems clearly" },
+      { label: "Systems thinking", sub: "boundaries, constraints, architecture" },
+      { label: "Agent orchestration", sub: "workflows, tool use, handoffs" },
+      { label: "Evals & observability", sub: "quality, traces, regression control" },
+      { label: "Production delivery", sub: "APIs, deployment, operational trust" }
+    ];
+
+    const center = { x: 410, y: 390 };
+    const outerR = 245;
+    const angleOffset = -Math.PI / 2;
+    const grid = document.getElementById("grid");
+    const labels = document.getElementById("labels");
+    const profilesLayer = document.getElementById("profiles");
+    const legend = document.getElementById("legend");
+    const scoreTable = document.getElementById("scoreTable");
+    const visible = new Map(profiles.map(profile => [profile.id, true]));
+
+    function svg(tag, attrs = {}) {
+      const el = document.createElementNS("http://www.w3.org/2000/svg", tag);
+      Object.entries(attrs).forEach(([key, value]) => el.setAttribute(key, value));
+      return el;
+    }
+
+    function pointFor(index, magnitude = 100) {
+      const angle = angleOffset + (Math.PI * 2 * index) / axes.length;
+      const radius = (magnitude / 100) * outerR;
+      return {
+        x: center.x + Math.cos(angle) * radius,
+        y: center.y + Math.sin(angle) * radius
+      };
+    }
+
+    function polygonPath(values) {
+      return values
+        .map((value, index) => {
+          const p = pointFor(index, value);
+          return `${index === 0 ? "M" : "L"} ${p.x} ${p.y}`;
+        })
+        .join(" ") + " Z";
+    }
+
+    function drawGrid() {
+      for (let level = 20; level <= 100; level += 20) {
+        const points = axes.map((_, index) => {
+          const p = pointFor(index, level);
+          return `${p.x},${p.y}`;
+        }).join(" ");
+
+        grid.appendChild(svg("polygon", {
+          points,
+          class: "grid-ring"
+        }));
+
+        const tick = pointFor(0, level);
+        const text = svg("text", {
+          x: tick.x + 8,
+          y: tick.y + 4,
+          class: "ring-value"
+        });
+        text.textContent = level;
+        grid.appendChild(text);
+      }
+
+      axes.forEach((axis, index) => {
+        const end = pointFor(index, 100);
+        grid.appendChild(svg("line", {
+          x1: center.x,
+          y1: center.y,
+          x2: end.x,
+          y2: end.y,
+          class: "axis-line"
+        }));
+
+        const labelPoint = pointFor(index, 118);
+        const subPoint = pointFor(index, 126);
+        const title = svg("text", {
+          x: labelPoint.x,
+          y: labelPoint.y,
+          class: "axis-label"
+        });
+        title.textContent = axis.label;
+
+        const subtitle = svg("text", {
+          x: subPoint.x,
+          y: subPoint.y,
+          class: "axis-sub"
+        });
+        subtitle.textContent = axis.sub;
+
+        labels.appendChild(title);
+        labels.appendChild(subtitle);
+      });
+    }
+
+    function drawProfiles() {
+      profilesLayer.innerHTML = "";
+
+      profiles.forEach(profile => {
+        const on = visible.get(profile.id);
+        const group = svg("g", {
+          opacity: on ? "1" : "0.12"
+        });
+
+        const polygon = svg("path", {
+          d: polygonPath(profile.values),
+          class: "profile-fill",
+          fill: profile.color,
+          stroke: profile.color
+        });
+        group.appendChild(polygon);
+
+        profile.values.forEach((value, index) => {
+          const p = pointFor(index, value);
+          group.appendChild(svg("circle", {
+            cx: p.x,
+            cy: p.y,
+            r: 5,
+            class: "profile-point",
+            fill: profile.color
+          }));
+        });
+
+        profilesLayer.appendChild(group);
+      });
+    }
+
+    function drawLegend() {
+      profiles.forEach(profile => {
+        const button = document.createElement("button");
+        button.innerHTML = `<span class="legend-swatch" style="background:${profile.color}"></span>${profile.label}`;
+        button.dataset.id = profile.id;
+        button.addEventListener("click", () => {
+          const next = !visible.get(profile.id);
+          visible.set(profile.id, next);
+          button.classList.toggle("off", !next);
+          drawProfiles();
+        });
+        legend.appendChild(button);
+      });
+    }
+
+    function drawTable() {
+      const rows = [
+        `<thead>
+          <tr>
+            <th>Axis</th>
+            <th>You</th>
+            <th>Prod</th>
+            <th>Hybrid</th>
+          </tr>
+        </thead>`
+      ];
+
+      const body = axes.map((axis, index) => `
+        <tr>
+          <td>${axis.label}</td>
+          <td>${profiles[0].values[index]}</td>
+          <td>${profiles[1].values[index]}</td>
+          <td>${profiles[2].values[index]}</td>
+        </tr>
+      `).join("");
+
+      scoreTable.innerHTML = rows.join("") + `<tbody>${body}</tbody>`;
+    }
+
+    drawGrid();
+    drawLegend();
+    drawProfiles();
+    drawTable();
+  </script>
+</body>
+</html>

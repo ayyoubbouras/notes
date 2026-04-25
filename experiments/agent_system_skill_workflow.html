@@ -1,0 +1,756 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AI Agent System Skill Workflow</title>
+  <style>
+    :root {
+      --bg: #f6efe4;
+      --panel: rgba(255, 252, 247, 0.9);
+      --text: #15222c;
+      --muted: #5a6975;
+      --line: rgba(21, 34, 44, 0.12);
+      --current: #0d7a74;
+      --bridge: #d3891d;
+      --runtime: #35689a;
+      --hybrid: #cb5535;
+      --soft-current: rgba(13, 122, 116, 0.10);
+      --soft-bridge: rgba(211, 137, 29, 0.12);
+      --soft-runtime: rgba(53, 104, 154, 0.09);
+      --soft-hybrid: rgba(203, 85, 53, 0.10);
+      --shadow: 0 26px 68px rgba(21, 34, 44, 0.12);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--text);
+      font-family: "Avenir Next", "Trebuchet MS", "Gill Sans", sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(13, 122, 116, 0.10), transparent 30%),
+        radial-gradient(circle at top right, rgba(203, 85, 53, 0.12), transparent 34%),
+        linear-gradient(180deg, #fdf8f1 0%, #efe6d8 100%);
+    }
+
+    .shell {
+      max-width: 1480px;
+      margin: 0 auto;
+      padding: 28px 22px 36px;
+    }
+
+    .hero,
+    .content,
+    .bottom {
+      display: grid;
+      gap: 18px;
+    }
+
+    .hero {
+      grid-template-columns: 1.4fr 0.8fr;
+      margin-bottom: 18px;
+    }
+
+    .content {
+      grid-template-columns: minmax(0, 1.65fr) minmax(340px, 0.85fr);
+      align-items: start;
+    }
+
+    .bottom {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      margin-top: 18px;
+    }
+
+    .card {
+      background: var(--panel);
+      border: 1px solid rgba(21, 34, 44, 0.08);
+      border-radius: 26px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(10px);
+    }
+
+    .hero-main {
+      padding: 28px 30px;
+    }
+
+    .hero-main h1 {
+      margin: 0 0 10px;
+      font-family: "Baskerville", "Palatino Linotype", serif;
+      font-size: clamp(2rem, 3vw, 3.25rem);
+      line-height: 0.95;
+      letter-spacing: -0.03em;
+    }
+
+    .hero-main p,
+    .hero-side p,
+    .summary p,
+    .metric span,
+    .insight li {
+      color: var(--muted);
+      line-height: 1.58;
+    }
+
+    .hero-side,
+    .summary,
+    .compare,
+    .side {
+      padding: 22px 22px;
+      display: grid;
+      gap: 14px;
+    }
+
+    .eyebrow {
+      margin: 0;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: var(--muted);
+    }
+
+    .hero-side strong {
+      font-size: 1.26rem;
+      line-height: 1.2;
+    }
+
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .toolbar button {
+      appearance: none;
+      border: 1px solid rgba(21, 34, 44, 0.12);
+      background: rgba(255, 255, 255, 0.72);
+      color: var(--text);
+      border-radius: 999px;
+      padding: 10px 14px;
+      font: inherit;
+      cursor: pointer;
+      transition: background 140ms ease, border-color 140ms ease, opacity 140ms ease;
+    }
+
+    .toolbar button.active {
+      background: #fff;
+      border-color: rgba(21, 34, 44, 0.24);
+    }
+
+    .diagram {
+      padding: 14px;
+      overflow: hidden;
+    }
+
+    svg {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    .lane-strip {
+      stroke: rgba(21, 34, 44, 0.04);
+      stroke-width: 1.2;
+    }
+
+    .lane-title {
+      font-size: 15px;
+      font-weight: 700;
+      fill: rgba(21, 34, 44, 0.92);
+    }
+
+    .lane-sub {
+      font-size: 12px;
+      fill: rgba(90, 105, 117, 0.95);
+    }
+
+    .step-box {
+      stroke-width: 1.3;
+      transition: opacity 140ms ease;
+    }
+
+    .step-title {
+      font-size: 13px;
+      font-weight: 700;
+      text-anchor: middle;
+      fill: rgba(21, 34, 44, 0.96);
+      pointer-events: none;
+    }
+
+    .step-sub {
+      font-size: 11px;
+      text-anchor: middle;
+      fill: rgba(90, 105, 117, 0.95);
+      pointer-events: none;
+    }
+
+    .step-index {
+      font-size: 11px;
+      font-weight: 700;
+      text-anchor: middle;
+      fill: white;
+      pointer-events: none;
+    }
+
+    .flow-arrow,
+    .feedback-arrow,
+    .skill-link {
+      fill: none;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      transition: opacity 140ms ease, stroke-width 140ms ease;
+    }
+
+    .flow-arrow {
+      stroke: rgba(53, 104, 154, 0.52);
+      stroke-width: 3;
+    }
+
+    .feedback-arrow {
+      stroke: rgba(203, 85, 53, 0.46);
+      stroke-width: 3;
+      stroke-dasharray: 12 10;
+    }
+
+    .skill-link {
+      stroke: rgba(21, 34, 44, 0.18);
+      stroke-width: 2;
+      stroke-dasharray: 4 8;
+    }
+
+    .callout-pill {
+      stroke-width: 1.2;
+      transition: opacity 140ms ease;
+    }
+
+    .callout-text {
+      font-size: 12px;
+      font-weight: 700;
+      text-anchor: middle;
+      fill: rgba(21, 34, 44, 0.95);
+      pointer-events: none;
+    }
+
+    .value-chip {
+      stroke-width: 1.1;
+      transition: opacity 140ms ease;
+    }
+
+    .value-text {
+      font-size: 11px;
+      text-anchor: middle;
+      fill: rgba(21, 34, 44, 0.96);
+      pointer-events: none;
+    }
+
+    .diagram .dim {
+      opacity: 0.18;
+    }
+
+    .diagram .hidden {
+      opacity: 0.05;
+    }
+
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 8px;
+    }
+
+    .legend-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.92rem;
+      color: var(--muted);
+    }
+
+    .legend-swatch {
+      width: 12px;
+      height: 12px;
+      border-radius: 999px;
+      display: inline-block;
+    }
+
+    .side {
+      position: sticky;
+      top: 18px;
+    }
+
+    .metric-grid {
+      display: grid;
+      gap: 12px;
+    }
+
+    .metric {
+      border: 1px solid rgba(21, 34, 44, 0.08);
+      background: rgba(255, 255, 255, 0.66);
+      border-radius: 18px;
+      padding: 14px;
+    }
+
+    .metric strong {
+      display: block;
+      margin-bottom: 5px;
+      font-size: 0.98rem;
+    }
+
+    .insight {
+      margin: 0;
+      padding-left: 18px;
+    }
+
+    .insight li + li {
+      margin-top: 8px;
+    }
+
+    .compare-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .mini {
+      border-radius: 20px;
+      padding: 16px;
+      border: 1px solid rgba(21, 34, 44, 0.08);
+    }
+
+    .mini.bad {
+      background: rgba(203, 85, 53, 0.06);
+    }
+
+    .mini.good {
+      background: rgba(13, 122, 116, 0.07);
+    }
+
+    .mini strong {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 1rem;
+    }
+
+    .flow-list {
+      display: grid;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .flow-node {
+      padding: 10px 12px;
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.72);
+      border: 1px solid rgba(21, 34, 44, 0.08);
+      position: relative;
+      color: var(--muted);
+      line-height: 1.45;
+    }
+
+    .flow-node + .flow-node::before {
+      content: "↓";
+      position: absolute;
+      top: -15px;
+      left: 50%;
+      transform: translateX(-50%);
+      color: rgba(90, 105, 117, 0.72);
+      font-weight: 700;
+    }
+
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .summary-card {
+      padding: 14px;
+      border-radius: 18px;
+      border: 1px solid rgba(21, 34, 44, 0.08);
+      background: rgba(255, 255, 255, 0.66);
+    }
+
+    .summary-card strong {
+      display: block;
+      margin-bottom: 5px;
+      font-size: 0.98rem;
+    }
+
+    @media (max-width: 1160px) {
+      .hero,
+      .content,
+      .bottom {
+        grid-template-columns: 1fr;
+      }
+
+      .side {
+        position: static;
+      }
+    }
+
+    @media (max-width: 760px) {
+      .shell {
+        padding: 18px 14px 26px;
+      }
+
+      .card {
+        border-radius: 20px;
+      }
+
+      .compare-grid,
+      .summary-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <section class="hero">
+      <div class="card hero-main">
+        <h1>Where your skills create value inside an AI agent system.</h1>
+        <p>
+          This view separates the system into three things: the
+          <strong>runtime workflow</strong>, the <strong>structured intelligence layer</strong>
+          where your current skills already matter a lot, and the
+          <strong>production layer</strong> where the other high-value skills come in.
+          The point is not “learn everything.” The point is to see exactly where your current
+          stack is already valuable, and what additions turn it into a premium profile.
+        </p>
+      </div>
+      <div class="card hero-side">
+        <p class="eyebrow">Core read</p>
+        <strong>Your current value to agent systems is grounding, structure, policy, and trust.</strong>
+        <p>
+          The missing multiplier is not more abstract theory. It is the operating layer:
+          orchestration, evals, observability, and production integration.
+        </p>
+      </div>
+    </section>
+
+    <section class="content">
+      <div class="card diagram">
+        <div class="toolbar" id="toolbar">
+          <button class="active" data-view="all">Whole system</button>
+          <button data-view="current">Your current value</button>
+          <button data-view="bridge">Where other skills enter</button>
+          <button data-view="hybrid">Highest-value hybrid</button>
+        </div>
+
+        <svg id="workflow" viewBox="0 0 1280 860" aria-label="AI agent system workflow with skill layers">
+          <defs>
+            <marker id="arrowBlue" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
+              <path d="M 0 0 L 12 6 L 0 12 z" fill="rgba(53, 104, 154, 0.62)"></path>
+            </marker>
+            <marker id="arrowRed" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
+              <path d="M 0 0 L 12 6 L 0 12 z" fill="rgba(203, 85, 53, 0.58)"></path>
+            </marker>
+          </defs>
+
+          <g id="layers">
+            <rect x="70" y="82" width="1140" height="168" rx="26" fill="var(--soft-current)" class="lane-strip"></rect>
+            <text x="98" y="118" class="lane-title">Structured intelligence layer</text>
+            <text x="98" y="140" class="lane-sub">This is where your current strengths already make agents better.</text>
+
+            <rect x="70" y="286" width="1140" height="224" rx="26" fill="var(--soft-runtime)" class="lane-strip"></rect>
+            <text x="98" y="322" class="lane-title">Agent runtime workflow</text>
+            <text x="98" y="344" class="lane-sub">This is the actual path the request takes through the system.</text>
+
+            <rect x="70" y="546" width="1140" height="204" rx="26" fill="var(--soft-bridge)" class="lane-strip"></rect>
+            <text x="98" y="582" class="lane-title">Production multiplier layer</text>
+            <text x="98" y="604" class="lane-sub">This is where the adjacent skills make the whole system operational and high-value.</text>
+          </g>
+
+          <g id="runtimeSteps">
+            <line x1="180" y1="398" x2="1092" y2="398" class="flow-arrow" marker-end="url(#arrowBlue)"></line>
+
+            <g class="runtime step-group" data-kind="runtime">
+              <rect x="118" y="352" width="118" height="92" rx="20" fill="white" stroke="rgba(53,104,154,0.25)" class="step-box"></rect>
+              <circle cx="177" cy="338" r="16" fill="var(--runtime)"></circle>
+              <text x="177" y="342" class="step-index">1</text>
+              <text x="177" y="384" class="step-title">Problem intake</text>
+              <text x="177" y="404" class="step-sub">ticket, task, request</text>
+            </g>
+
+            <g class="runtime step-group" data-kind="runtime">
+              <rect x="270" y="352" width="136" height="92" rx="20" fill="white" stroke="rgba(53,104,154,0.25)" class="step-box"></rect>
+              <circle cx="338" cy="338" r="16" fill="var(--runtime)"></circle>
+              <text x="338" y="342" class="step-index">2</text>
+              <text x="338" y="384" class="step-title">Task interpretation</text>
+              <text x="338" y="404" class="step-sub">what is this really asking?</text>
+            </g>
+
+            <g class="runtime step-group" data-kind="runtime">
+              <rect x="440" y="352" width="136" height="92" rx="20" fill="white" stroke="rgba(53,104,154,0.25)" class="step-box"></rect>
+              <circle cx="508" cy="338" r="16" fill="var(--runtime)"></circle>
+              <text x="508" y="342" class="step-index">3</text>
+              <text x="508" y="384" class="step-title">Grounding</text>
+              <text x="508" y="404" class="step-sub">structured context retrieval</text>
+            </g>
+
+            <g class="runtime step-group" data-kind="runtime">
+              <rect x="610" y="352" width="136" height="92" rx="20" fill="white" stroke="rgba(53,104,154,0.25)" class="step-box"></rect>
+              <circle cx="678" cy="338" r="16" fill="var(--runtime)"></circle>
+              <text x="678" y="342" class="step-index">4</text>
+              <text x="678" y="384" class="step-title">Policy gate</text>
+              <text x="678" y="404" class="step-sub">allowed, route, escalate</text>
+            </g>
+
+            <g class="runtime step-group" data-kind="runtime">
+              <rect x="780" y="352" width="136" height="92" rx="20" fill="white" stroke="rgba(53,104,154,0.25)" class="step-box"></rect>
+              <circle cx="848" cy="338" r="16" fill="var(--runtime)"></circle>
+              <text x="848" y="342" class="step-index">5</text>
+              <text x="848" y="384" class="step-title">Plan & act</text>
+              <text x="848" y="404" class="step-sub">tools, agents, decisions</text>
+            </g>
+
+            <g class="runtime step-group" data-kind="runtime">
+              <rect x="950" y="352" width="136" height="92" rx="20" fill="white" stroke="rgba(53,104,154,0.25)" class="step-box"></rect>
+              <circle cx="1018" cy="338" r="16" fill="var(--runtime)"></circle>
+              <text x="1018" y="342" class="step-index">6</text>
+              <text x="1018" y="384" class="step-title">Human handoff</text>
+              <text x="1018" y="404" class="step-sub">approve, clarify, finish</text>
+            </g>
+          </g>
+
+          <g id="currentSkills">
+            <g class="current skill-group" data-kind="current">
+              <rect x="236" y="156" width="204" height="58" rx="18" fill="white" stroke="rgba(13,122,116,0.30)" class="callout-pill"></rect>
+              <text x="338" y="178" class="callout-text">Domain modeling</text>
+              <text x="338" y="197" class="value-text">formalize what the task means</text>
+              <path d="M 338 214 C 338 244, 338 280, 338 352" class="skill-link"></path>
+            </g>
+
+            <g class="current skill-group" data-kind="current">
+              <rect x="406" y="114" width="204" height="58" rx="18" fill="white" stroke="rgba(13,122,116,0.30)" class="callout-pill"></rect>
+              <text x="508" y="136" class="callout-text">Ontologies + KGs</text>
+              <text x="508" y="155" class="value-text">ground the agent in structure</text>
+              <path d="M 508 172 C 508 220, 508 276, 508 352" class="skill-link"></path>
+            </g>
+
+            <g class="current skill-group" data-kind="current">
+              <rect x="576" y="156" width="204" height="58" rx="18" fill="white" stroke="rgba(13,122,116,0.30)" class="callout-pill"></rect>
+              <text x="678" y="178" class="callout-text">Deterministic design</text>
+              <text x="678" y="197" class="value-text">policy, gates, safe routing</text>
+              <path d="M 678 214 C 678 244, 678 280, 678 352" class="skill-link"></path>
+            </g>
+
+            <g class="current skill-group" data-kind="current">
+              <rect x="746" y="114" width="204" height="58" rx="18" fill="white" stroke="rgba(13,122,116,0.30)" class="callout-pill"></rect>
+              <text x="848" y="136" class="callout-text">Systems thinking</text>
+              <text x="848" y="155" class="value-text">clear boundaries and flow control</text>
+              <path d="M 848 172 C 848 236, 848 286, 848 352" class="skill-link"></path>
+            </g>
+
+            <rect x="212" y="228" width="764" height="18" rx="9" fill="rgba(13,122,116,0.16)" class="current focus-band" data-kind="current"></rect>
+            <text x="594" y="241" class="value-text">This is the part of the system where your current stack already creates disproportionate value.</text>
+          </g>
+
+          <g id="valueChips">
+            <g class="value current" data-kind="current">
+              <rect x="270" y="470" width="136" height="34" rx="16" fill="rgba(13,122,116,0.12)" stroke="rgba(13,122,116,0.24)" class="value-chip"></rect>
+              <text x="338" y="491" class="value-text">clearer task meaning</text>
+            </g>
+            <g class="value current" data-kind="current">
+              <rect x="440" y="470" width="136" height="34" rx="16" fill="rgba(13,122,116,0.12)" stroke="rgba(13,122,116,0.24)" class="value-chip"></rect>
+              <text x="508" y="491" class="value-text">less hallucination</text>
+            </g>
+            <g class="value current" data-kind="current">
+              <rect x="610" y="470" width="136" height="34" rx="16" fill="rgba(13,122,116,0.12)" stroke="rgba(13,122,116,0.24)" class="value-chip"></rect>
+              <text x="678" y="491" class="value-text">safer decisions</text>
+            </g>
+            <g class="value bridge" data-kind="bridge">
+              <rect x="780" y="470" width="136" height="34" rx="16" fill="rgba(211,137,29,0.14)" stroke="rgba(211,137,29,0.26)" class="value-chip"></rect>
+              <text x="848" y="491" class="value-text">controlled action</text>
+            </g>
+            <g class="value bridge" data-kind="bridge">
+              <rect x="950" y="470" width="136" height="34" rx="16" fill="rgba(211,137,29,0.14)" stroke="rgba(211,137,29,0.26)" class="value-chip"></rect>
+              <text x="1018" y="491" class="value-text">trusted handoff</text>
+            </g>
+          </g>
+
+          <g id="bridgeSkills">
+            <g class="bridge skill-group" data-kind="bridge">
+              <rect x="728" y="626" width="240" height="60" rx="18" fill="white" stroke="rgba(211,137,29,0.34)" class="callout-pill"></rect>
+              <text x="848" y="648" class="callout-text">Agent orchestration</text>
+              <text x="848" y="667" class="value-text">state, tool use, routing, escalation</text>
+              <path d="M 848 626 C 848 572, 848 536, 848 444" class="skill-link"></path>
+            </g>
+
+            <g class="bridge skill-group" data-kind="bridge">
+              <rect x="898" y="690" width="240" height="60" rx="18" fill="white" stroke="rgba(211,137,29,0.34)" class="callout-pill"></rect>
+              <text x="1018" y="712" class="callout-text">Cloud + API integration</text>
+              <text x="1018" y="731" class="value-text">real tools, real systems, production actions</text>
+              <path d="M 1018 690 C 1018 636, 1018 578, 1018 444" class="skill-link"></path>
+            </g>
+
+            <g class="bridge skill-group" data-kind="bridge">
+              <rect x="236" y="626" width="240" height="60" rx="18" fill="white" stroke="rgba(211,137,29,0.34)" class="callout-pill"></rect>
+              <text x="356" y="648" class="callout-text">Hybrid retrieval</text>
+              <text x="356" y="667" class="value-text">KG + embeddings + rules together</text>
+              <path d="M 356 626 C 356 566, 430 528, 508 444" class="skill-link"></path>
+            </g>
+
+            <g class="bridge skill-group" data-kind="bridge">
+              <rect x="492" y="674" width="240" height="60" rx="18" fill="white" stroke="rgba(211,137,29,0.34)" class="callout-pill"></rect>
+              <text x="612" y="696" class="callout-text">Evals + observability</text>
+              <text x="612" y="715" class="value-text">measure quality, drift, and failures</text>
+              <path d="M 612 674 C 612 628, 678 584, 1018 444" class="skill-link"></path>
+            </g>
+
+            <path d="M 1018 444 C 1120 520, 1108 614, 782 720 C 610 772, 422 760, 318 686" class="feedback-arrow" marker-end="url(#arrowRed)" data-kind="hybrid"></path>
+            <text x="913" y="553" class="value-text" data-kind="hybrid">feedback loop: outcomes improve the structure layer</text>
+
+            <rect x="232" y="748" width="906" height="20" rx="10" fill="rgba(211,137,29,0.17)" class="bridge focus-band" data-kind="bridge"></rect>
+            <text x="685" y="762" class="value-text">This is where the missing production skills turn your structured thinking into a high-value operating system.</text>
+          </g>
+        </svg>
+
+        <div class="legend">
+          <span class="legend-item"><span class="legend-swatch" style="background: var(--current)"></span>Your current strengths</span>
+          <span class="legend-item"><span class="legend-swatch" style="background: var(--runtime)"></span>Agent runtime workflow</span>
+          <span class="legend-item"><span class="legend-swatch" style="background: var(--bridge)"></span>Where adjacent skills enter</span>
+          <span class="legend-item"><span class="legend-swatch" style="background: var(--hybrid)"></span>High-value closed loop</span>
+        </div>
+      </div>
+
+      <aside class="card side">
+        <div>
+          <p class="eyebrow">Why you already matter</p>
+          <div class="metric-grid">
+            <div class="metric">
+              <strong>Grounding</strong>
+              <span>You reduce agent guesswork by turning messy domain reality into explicit structure.</span>
+            </div>
+            <div class="metric">
+              <strong>Controllability</strong>
+              <span>You think in policy, routes, boundaries, and safe handoffs instead of blind model trust.</span>
+            </div>
+            <div class="metric">
+              <strong>Enterprise trust</strong>
+              <span>Your skill stack fits exactly where companies care about auditability, governance, and predictable behavior.</span>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <p class="eyebrow">What the next skills do</p>
+          <ul class="insight">
+            <li><strong>Orchestration</strong>: turns good reasoning structure into a controllable workflow.</li>
+            <li><strong>API and cloud integration</strong>: turns the system from advisor into operator.</li>
+            <li><strong>Evals and observability</strong>: turn intuition into measurable reliability.</li>
+            <li><strong>Hybrid retrieval</strong>: makes your graph/ontology side directly useful to runtime decisions.</li>
+          </ul>
+        </div>
+
+        <div>
+          <p class="eyebrow">What companies will pay for</p>
+          <div class="metric-grid">
+            <div class="metric">
+              <strong>Not just "ontology"</strong>
+              <span>Too narrow by itself.</span>
+            </div>
+            <div class="metric">
+              <strong>Not just "AI builder"</strong>
+              <span>Too crowded by itself.</span>
+            </div>
+            <div class="metric">
+              <strong>Structured AI reliability</strong>
+              <span>This is the premium combination: semantics plus production AI operations.</span>
+            </div>
+          </div>
+        </div>
+      </aside>
+    </section>
+
+    <section class="bottom">
+      <div class="card compare">
+        <p class="eyebrow">Clarifying visual</p>
+        <div class="compare-grid">
+          <div class="mini bad">
+            <strong>Without your kind of skill layer</strong>
+            <div class="flow-list">
+              <div class="flow-node">Raw prompt + raw docs</div>
+              <div class="flow-node">LLM guesses task meaning</div>
+              <div class="flow-node">Weak routing and brittle actions</div>
+              <div class="flow-node">Hard to debug, hard to trust</div>
+            </div>
+          </div>
+          <div class="mini good">
+            <strong>With your skill layer in the system</strong>
+            <div class="flow-list">
+              <div class="flow-node">Domain model + ontology + KG</div>
+              <div class="flow-node">Grounded interpretation and policy gates</div>
+              <div class="flow-node">Controlled agent actions and escalation</div>
+              <div class="flow-node">More trustworthy enterprise workflow</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card summary">
+        <p class="eyebrow">In plain language</p>
+        <div class="summary-grid">
+          <div class="summary-card">
+            <strong>Your current role in the system</strong>
+            <p>You make the agent understand the domain correctly and stop it from taking the wrong meaning path too early.</p>
+          </div>
+          <div class="summary-card">
+            <strong>The next-value layer</strong>
+            <p>You make the system measurable, deployable, and operationally reliable instead of merely well-structured.</p>
+          </div>
+          <div class="summary-card">
+            <strong>The final high-value identity</strong>
+            <p>You become the person who makes AI agents trustworthy enough for real work in complex environments.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    const toolbar = document.getElementById("toolbar");
+    const groups = Array.from(document.querySelectorAll("[data-kind]"));
+
+    function applyView(view) {
+      groups.forEach(el => {
+        el.classList.remove("dim", "hidden");
+
+        if (view === "all") return;
+
+        const kind = el.dataset.kind;
+        if (view === "current") {
+          if (kind === "bridge") el.classList.add("dim");
+          if (kind === "hybrid") el.classList.add("hidden");
+        }
+
+        if (view === "bridge") {
+          if (kind === "current") el.classList.add("dim");
+          if (kind === "hybrid") el.classList.add("hidden");
+        }
+
+        if (view === "hybrid") {
+          if (kind === "runtime") el.classList.remove("dim");
+          if (kind === "current" || kind === "bridge" || kind === "hybrid") el.classList.remove("dim");
+        }
+      });
+    }
+
+    toolbar.addEventListener("click", event => {
+      const button = event.target.closest("button[data-view]");
+      if (!button) return;
+
+      const view = button.dataset.view;
+      toolbar.querySelectorAll("button").forEach(el => {
+        el.classList.toggle("active", el === button);
+      });
+      applyView(view);
+    });
+
+    applyView("all");
+  </script>
+</body>
+</html>

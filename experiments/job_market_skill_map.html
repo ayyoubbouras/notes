@@ -1,0 +1,1170 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Ayyoub Job Market Skill Map</title>
+  <style>
+    :root {
+      --bg: #f7f2e8;
+      --panel: rgba(255, 251, 244, 0.86);
+      --line: rgba(62, 78, 89, 0.16);
+      --text: #14212b;
+      --muted: #566672;
+      --current: #0b7a75;
+      --bridge: #d28718;
+      --target: #c64d2f;
+      --role: #2d5f94;
+      --trap: #7c7a75;
+      --glow: rgba(198, 77, 47, 0.22);
+      --shadow: 0 22px 60px rgba(20, 33, 43, 0.13);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--text);
+      font-family: "Avenir Next", "Trebuchet MS", "Gill Sans", sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(198, 77, 47, 0.12), transparent 34%),
+        radial-gradient(circle at top right, rgba(11, 122, 117, 0.10), transparent 28%),
+        linear-gradient(180deg, #fbf7f0 0%, #f1ebdf 100%);
+    }
+
+    .shell {
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: 28px 24px 36px;
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: 1.3fr 0.9fr;
+      gap: 18px;
+      align-items: start;
+      margin-bottom: 18px;
+    }
+
+    .hero-card,
+    .summary-card,
+    .panel,
+    .map-card {
+      background: var(--panel);
+      border: 1px solid rgba(20, 33, 43, 0.08);
+      border-radius: 24px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(12px);
+    }
+
+    .hero-card {
+      padding: 26px 28px;
+    }
+
+    .hero-card h1 {
+      margin: 0 0 10px;
+      font-family: "Baskerville", "Palatino Linotype", serif;
+      font-size: clamp(2rem, 3vw, 3.2rem);
+      line-height: 0.95;
+      letter-spacing: -0.03em;
+    }
+
+    .hero-card p {
+      margin: 0;
+      max-width: 64ch;
+      line-height: 1.55;
+      color: var(--muted);
+      font-size: 1.03rem;
+    }
+
+    .summary-card {
+      padding: 22px 24px;
+      display: grid;
+      gap: 12px;
+    }
+
+    .summary-card h2 {
+      margin: 0;
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: var(--muted);
+    }
+
+    .summary-card strong {
+      display: block;
+      font-size: 1.3rem;
+      line-height: 1.2;
+    }
+
+    .summary-card span {
+      color: var(--muted);
+      line-height: 1.45;
+    }
+
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .toolbar button {
+      appearance: none;
+      border: 1px solid rgba(20, 33, 43, 0.12);
+      background: rgba(255, 255, 255, 0.72);
+      color: var(--text);
+      border-radius: 999px;
+      padding: 10px 14px;
+      font: inherit;
+      cursor: pointer;
+      transition: transform 180ms ease, background 180ms ease, border-color 180ms ease;
+    }
+
+    .toolbar button:hover,
+    .toolbar button.active {
+      transform: translateY(-1px);
+      background: #fff;
+      border-color: rgba(20, 33, 43, 0.26);
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.65fr) minmax(300px, 0.85fr);
+      gap: 18px;
+      align-items: start;
+    }
+
+    .map-card {
+      padding: 14px;
+      overflow: hidden;
+    }
+
+    .panel {
+      padding: 22px 20px;
+      position: sticky;
+      top: 18px;
+      display: grid;
+      gap: 18px;
+    }
+
+    .panel h3,
+    .panel p,
+    .panel ul {
+      margin: 0;
+    }
+
+    .panel h3 {
+      font-size: 1.35rem;
+      line-height: 1.2;
+    }
+
+    .panel .kicker {
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: var(--muted);
+    }
+
+    .panel .blurb {
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .score-grid {
+      display: grid;
+      gap: 10px;
+    }
+
+    .score-row {
+      display: grid;
+      grid-template-columns: 116px 1fr 42px;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.95rem;
+    }
+
+    .score-row label {
+      color: var(--muted);
+    }
+
+    .track {
+      position: relative;
+      height: 10px;
+      border-radius: 999px;
+      overflow: hidden;
+      background: rgba(20, 33, 43, 0.10);
+    }
+
+    .fill {
+      position: absolute;
+      inset: 0 auto 0 0;
+      border-radius: 999px;
+      background: linear-gradient(90deg, var(--fillA), var(--fillB));
+      width: 0;
+      transition: width 240ms ease;
+    }
+
+    .panel ul {
+      padding-left: 18px;
+      color: var(--muted);
+      line-height: 1.55;
+    }
+
+    .panel li + li {
+      margin-top: 8px;
+    }
+
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 4px;
+    }
+
+    .legend-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.92rem;
+      color: var(--muted);
+    }
+
+    .legend-swatch {
+      width: 12px;
+      height: 12px;
+      border-radius: 999px;
+    }
+
+    svg {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    .zone-label {
+      font-size: 18px;
+      font-weight: 700;
+      fill: rgba(20, 33, 43, 0.72);
+    }
+
+    .zone-sub {
+      font-size: 13px;
+      fill: rgba(86, 102, 114, 0.95);
+    }
+
+    .axis-label {
+      font-size: 15px;
+      fill: rgba(20, 33, 43, 0.76);
+      font-weight: 700;
+    }
+
+    .axis-sub {
+      font-size: 12px;
+      fill: rgba(86, 102, 114, 0.85);
+    }
+
+    .grid-line {
+      stroke: var(--line);
+      stroke-width: 1;
+    }
+
+    .axis-line {
+      stroke: rgba(20, 33, 43, 0.30);
+      stroke-width: 1.6;
+    }
+
+    .edge {
+      fill: none;
+      stroke-linecap: round;
+      stroke-width: 2.4;
+      opacity: 0.78;
+      transition: opacity 180ms ease, stroke-width 180ms ease;
+    }
+
+    .edge.dimmed {
+      opacity: 0.10;
+    }
+
+    .edge.primary {
+      stroke-width: 4;
+      stroke-dasharray: 12 10;
+    }
+
+    .node {
+      cursor: pointer;
+      transition: opacity 140ms ease;
+    }
+
+    .node.dimmed {
+      opacity: 0.18;
+      pointer-events: none;
+    }
+
+    .node.active .halo {
+      opacity: 1;
+      transform: scale(1.18);
+    }
+
+    .halo {
+      opacity: 0;
+      transition: opacity 220ms ease, transform 220ms ease;
+      transform-origin: center;
+    }
+
+    .node-title {
+      font-size: 12px;
+      font-weight: 700;
+      text-anchor: middle;
+      fill: rgba(20, 33, 43, 0.96);
+      opacity: 0;
+      transition: opacity 120ms ease;
+      pointer-events: none;
+    }
+
+    .node-subtitle {
+      font-size: 10px;
+      text-anchor: middle;
+      fill: rgba(86, 102, 114, 0.95);
+      opacity: 0;
+      transition: opacity 120ms ease;
+      pointer-events: none;
+    }
+
+    .node.show-label .node-title,
+    .node.hovered .node-title,
+    .node.active .node-title {
+      opacity: 1;
+    }
+
+    .node.show-subtitle .node-subtitle,
+    .node.hovered .node-subtitle,
+    .node.active .node-subtitle {
+      opacity: 1;
+    }
+
+    .map-footer {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 12px;
+    }
+
+    .footer-card {
+      background: rgba(255, 255, 255, 0.66);
+      border: 1px solid rgba(20, 33, 43, 0.07);
+      border-radius: 18px;
+      padding: 14px;
+    }
+
+    .footer-card strong {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 0.98rem;
+    }
+
+    .footer-card span {
+      color: var(--muted);
+      line-height: 1.45;
+      font-size: 0.93rem;
+    }
+
+    .tooltip {
+      position: fixed;
+      z-index: 20;
+      pointer-events: none;
+      background: rgba(20, 33, 43, 0.94);
+      color: #fff;
+      padding: 10px 12px;
+      border-radius: 12px;
+      font-size: 0.88rem;
+      line-height: 1.35;
+      box-shadow: 0 12px 28px rgba(20, 33, 43, 0.28);
+      max-width: 280px;
+      opacity: 0;
+      transform: translate(-50%, calc(-100% - 12px));
+      transition: opacity 100ms ease;
+    }
+
+    .tooltip.visible {
+      opacity: 1;
+    }
+
+    @media (max-width: 1100px) {
+      .hero,
+      .layout {
+        grid-template-columns: 1fr;
+      }
+
+      .panel {
+        position: static;
+      }
+    }
+
+    @media (max-width: 760px) {
+      .shell {
+        padding: 18px 14px 24px;
+      }
+
+      .hero-card,
+      .summary-card,
+      .panel,
+      .map-card {
+        border-radius: 20px;
+      }
+
+      .map-footer {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <section class="hero">
+      <div class="hero-card">
+        <h1>Where you land in the market, and where the money is.</h1>
+        <p>
+          This map places your current skill bundle on a market grid. The horizontal axis is
+          <strong>structured knowledge depth</strong>. The vertical axis is
+          <strong>production AI leverage</strong>. The most valuable zone is not "pure ontology"
+          and not "generic LLM builder" - it is the intersection where semantics, evaluation,
+          orchestration, and reliability come together.
+        </p>
+      </div>
+      <div class="summary-card">
+        <h2>Read This First</h2>
+        <strong>Your strongest long-term positioning is "structured AI reliability".</strong>
+        <span>
+          You already have the hard-to-copy semantic side. The comp jump comes from layering
+          evals, observability, orchestration, and production delivery on top of it.
+        </span>
+      </div>
+    </section>
+
+    <div class="toolbar" id="toolbar">
+      <button class="active" data-filter="all">All nodes</button>
+      <button data-filter="skills">Skills only</button>
+      <button data-filter="roles">Roles only</button>
+      <button data-filter="path">Best-value path</button>
+      <button data-filter="traps">Low-value local maxima</button>
+      <button id="labelsToggle" type="button">Show all labels</button>
+    </div>
+
+    <section class="layout">
+      <div class="map-card">
+        <svg id="skillMap" viewBox="0 0 1120 760" aria-label="Interactive job market skill map">
+          <defs>
+            <radialGradient id="hotspot" cx="70%" cy="28%" r="55%">
+              <stop offset="0%" stop-color="rgba(198,77,47,0.45)"/>
+              <stop offset="58%" stop-color="rgba(198,77,47,0.18)"/>
+              <stop offset="100%" stop-color="rgba(198,77,47,0)"/>
+            </radialGradient>
+            <filter id="softGlow" x="-50%" y="-50%" width="200%" height="200%">
+              <feGaussianBlur stdDeviation="12" result="blur"/>
+              <feMerge>
+                <feMergeNode in="blur"/>
+                <feMergeNode in="SourceGraphic"/>
+              </feMerge>
+            </filter>
+          </defs>
+
+          <rect x="0" y="0" width="1120" height="760" rx="24" fill="rgba(255,255,255,0.52)"></rect>
+          <rect x="590" y="58" width="450" height="240" rx="34" fill="url(#hotspot)"></rect>
+
+          <g id="zones">
+            <rect x="100" y="108" width="260" height="180" rx="28" fill="rgba(45,95,148,0.07)"></rect>
+            <text x="130" y="150" class="zone-label">Generic AI builders</text>
+            <text x="130" y="176" class="zone-sub">High demand, but crowded.</text>
+            <text x="130" y="196" class="zone-sub">Semantics is the missing moat.</text>
+
+            <rect x="720" y="420" width="260" height="170" rx="28" fill="rgba(124,122,117,0.10)"></rect>
+            <text x="750" y="462" class="zone-label">Pure ontology lane</text>
+            <text x="750" y="488" class="zone-sub">Strong fit for you, but lower ceiling</text>
+            <text x="750" y="508" class="zone-sub">unless attached to production AI.</text>
+
+            <rect x="620" y="108" width="360" height="180" rx="28" fill="rgba(198,77,47,0.10)"></rect>
+            <text x="650" y="150" class="zone-label">Highest-value wedge</text>
+            <text x="650" y="176" class="zone-sub">Structured AI reliability:</text>
+            <text x="650" y="196" class="zone-sub">KG + evals + orchestration + delivery.</text>
+          </g>
+
+          <g id="grid">
+            <line class="grid-line" x1="110" y1="110" x2="110" y2="650"></line>
+            <line class="grid-line" x1="110" y1="650" x2="1010" y2="650"></line>
+            <line class="grid-line" x1="290" y1="110" x2="290" y2="650"></line>
+            <line class="grid-line" x1="470" y1="110" x2="470" y2="650"></line>
+            <line class="grid-line" x1="650" y1="110" x2="650" y2="650"></line>
+            <line class="grid-line" x1="830" y1="110" x2="830" y2="650"></line>
+            <line class="grid-line" x1="1010" y1="110" x2="1010" y2="650"></line>
+
+            <line class="grid-line" x1="110" y1="110" x2="1010" y2="110"></line>
+            <line class="grid-line" x1="110" y1="245" x2="1010" y2="245"></line>
+            <line class="grid-line" x1="110" y1="380" x2="1010" y2="380"></line>
+            <line class="grid-line" x1="110" y1="515" x2="1010" y2="515"></line>
+            <line class="grid-line" x1="110" y1="650" x2="1010" y2="650"></line>
+
+            <text x="490" y="710" class="axis-label">Structured knowledge depth</text>
+            <text x="188" y="732" class="axis-sub">low: generic LLM product work</text>
+            <text x="805" y="732" class="axis-sub">high: ontology, graph, semantic rigor</text>
+
+            <text x="30" y="382" class="axis-label" transform="rotate(-90 30 382)">Production AI leverage</text>
+            <text x="26" y="560" class="axis-sub" transform="rotate(-90 26 560)">low: niche semantics work</text>
+            <text x="26" y="240" class="axis-sub" transform="rotate(-90 26 240)">high: evals, delivery, orchestration</text>
+          </g>
+
+          <g id="edgesLayer"></g>
+          <g id="nodesLayer"></g>
+        </svg>
+
+        <div class="map-footer">
+          <div class="footer-card">
+            <strong>Your current edge</strong>
+            <span>Semantics, ontology modeling, graph thinking, deterministic instincts, and a real applied-science mindset.</span>
+          </div>
+          <div class="footer-card">
+            <strong>The biggest comp unlock</strong>
+            <span>Be the person who can make agentic systems measurable, auditable, and trustworthy in production.</span>
+          </div>
+          <div class="footer-card">
+            <strong>The trap to avoid</strong>
+            <span>Getting known only as "the ontology person" instead of the builder who makes structure useful to AI systems.</span>
+          </div>
+        </div>
+      </div>
+
+      <aside class="panel">
+        <div>
+          <p class="kicker" id="panelKicker">Current positioning</p>
+          <h3 id="panelTitle">You now</h3>
+          <p class="blurb" id="panelBlurb"></p>
+        </div>
+
+        <div class="score-grid" id="scoreGrid"></div>
+
+        <div>
+          <p class="kicker">What this means</p>
+          <ul id="panelList"></ul>
+        </div>
+
+        <div>
+          <p class="kicker">Legend</p>
+          <div class="legend">
+            <span class="legend-item"><span class="legend-swatch" style="background: var(--current)"></span>Current strengths</span>
+            <span class="legend-item"><span class="legend-swatch" style="background: var(--bridge)"></span>Bridge skills</span>
+            <span class="legend-item"><span class="legend-swatch" style="background: var(--target)"></span>Highest-value destination</span>
+            <span class="legend-item"><span class="legend-swatch" style="background: var(--role)"></span>Role clusters</span>
+            <span class="legend-item"><span class="legend-swatch" style="background: var(--trap)"></span>Low-value traps</span>
+          </div>
+        </div>
+      </aside>
+    </section>
+  </div>
+
+  <div class="tooltip" id="tooltip"></div>
+
+  <script>
+    const map = document.getElementById("skillMap");
+    const nodesLayer = document.getElementById("nodesLayer");
+    const edgesLayer = document.getElementById("edgesLayer");
+    const tooltip = document.getElementById("tooltip");
+    const panelKicker = document.getElementById("panelKicker");
+    const panelTitle = document.getElementById("panelTitle");
+    const panelBlurb = document.getElementById("panelBlurb");
+    const panelList = document.getElementById("panelList");
+    const scoreGrid = document.getElementById("scoreGrid");
+    const toolbar = document.getElementById("toolbar");
+    const labelsToggle = document.getElementById("labelsToggle");
+
+    const plotX = value => 110 + (value / 100) * 900;
+    const plotY = value => 650 - (value / 100) * 540;
+
+    const palette = {
+      current: getComputedStyle(document.documentElement).getPropertyValue("--current").trim(),
+      bridge: getComputedStyle(document.documentElement).getPropertyValue("--bridge").trim(),
+      target: getComputedStyle(document.documentElement).getPropertyValue("--target").trim(),
+      role: getComputedStyle(document.documentElement).getPropertyValue("--role").trim(),
+      trap: getComputedStyle(document.documentElement).getPropertyValue("--trap").trim()
+    };
+
+    let showAllLabels = false;
+    const keyNodeIds = new Set([
+      "you",
+      "highest-value",
+      "agent-reliability",
+      "kg-agent",
+      "applied-ai",
+      "fde",
+      "domain-kg",
+      "pure-ontologist",
+      "prompt-engineer"
+    ]);
+
+    const nodes = [
+      {
+        id: "you",
+        label: "You now",
+        subtitle: "rare semantic base, not finished yet",
+        category: "current",
+        layer: "skills",
+        x: 72,
+        y: 58,
+        size: 18,
+        labelSide: "top",
+        kicker: "Current positioning",
+        blurb: "You already sit in a strong niche: deep structured-knowledge instincts plus real applied AI curiosity. This is better than a generic profile, but the market will pay even more once your work is clearly tied to evals, orchestration, and reliable production delivery.",
+        scores: { fit: 95, demand: 74, comp: 78, scarcity: 88 },
+        bullets: [
+          "Strongest current moat: ontologies, knowledge graphs, formal thinking, and deterministic system instincts.",
+          "Main gap: your profile still reads more semantic than production-AI, which leaves money on the table.",
+          "Best next move: add visible evidence that you can benchmark, ship, and harden AI systems."
+        ]
+      },
+      {
+        id: "ontologies",
+        label: "Ontologies",
+        subtitle: "current strength",
+        category: "current",
+        layer: "skills",
+        x: 66,
+        y: 50,
+        size: 10,
+        kicker: "Current strength",
+        blurb: "This is one of your most defensible skills. Many AI engineers cannot model domains cleanly enough to make systems trustworthy.",
+        scores: { fit: 98, demand: 66, comp: 64, scarcity: 88 },
+        bullets: [
+          "Keep this as your differentiator, not your whole brand.",
+          "It becomes much more valuable when attached to retrieval, policy, or agent behavior."
+        ]
+      },
+      {
+        id: "knowledge-graphs",
+        label: "Knowledge Graphs",
+        subtitle: "current strength",
+        category: "current",
+        layer: "skills",
+        x: 74,
+        y: 54,
+        size: 11,
+        kicker: "Current strength",
+        blurb: "Good market value already, especially in healthcare, manufacturing, enterprise search, and internal AI platforms.",
+        scores: { fit: 96, demand: 72, comp: 72, scarcity: 82 },
+        bullets: [
+          "KG skill alone pays decently.",
+          "KG plus agent grounding, evals, and product delivery pays much better."
+        ]
+      },
+      {
+        id: "systems-thinking",
+        label: "Systems Thinking",
+        subtitle: "current strength",
+        category: "current",
+        layer: "skills",
+        x: 62,
+        y: 61,
+        size: 9,
+        kicker: "Current strength",
+        blurb: "This is not a keyword skill, but it is one of the reasons your instincts are stronger than average. It helps you design boundaries, flows, and control points.",
+        scores: { fit: 92, demand: 70, comp: 70, scarcity: 78 },
+        bullets: [
+          "Translate this into architecture decisions, not just philosophy.",
+          "Employers reward it when it shows up as reliability, scalability, and good tradeoffs."
+        ]
+      },
+      {
+        id: "deterministic-instinct",
+        label: "Deterministic AI instinct",
+        subtitle: "current strength",
+        category: "current",
+        layer: "skills",
+        x: 79,
+        y: 60,
+        size: 10,
+        kicker: "Current strength",
+        blurb: "This is one of your best instincts. Many teams over-trust the model. You naturally think in policy, constraints, reasoning layers, and controlled handoffs.",
+        scores: { fit: 94, demand: 81, comp: 83, scarcity: 86 },
+        bullets: [
+          "This maps directly to agent reliability and enterprise AI roles.",
+          "Make it legible through evaluation artifacts and shipping history."
+        ]
+      },
+      {
+        id: "python",
+        label: "Python delivery",
+        subtitle: "current strength",
+        category: "current",
+        layer: "skills",
+        x: 57,
+        y: 49,
+        size: 8,
+        kicker: "Current strength",
+        blurb: "Important foundation, but not the differentiator by itself. It becomes valuable when attached to pipelines, services, and evaluation harnesses.",
+        scores: { fit: 84, demand: 88, comp: 70, scarcity: 40 },
+        bullets: [
+          "Baseline skill, not a moat.",
+          "Use it to ship tools, APIs, tests, and eval pipelines."
+        ]
+      },
+      {
+        id: "evals",
+        label: "LLM evals",
+        subtitle: "bridge skill",
+        category: "bridge",
+        layer: "skills",
+        x: 76,
+        y: 68,
+        size: 10,
+        kicker: "Bridge skill",
+        blurb: "This is the biggest short-term multiplier for your market value. Evals convert your good instincts into hard evidence.",
+        scores: { fit: 76, demand: 92, comp: 90, scarcity: 85 },
+        bullets: [
+          "Learn gold sets, regression testing, LLM-as-judge, calibration, and failure analysis.",
+          "This is the fastest way to move from semantic specialist to applied AI operator."
+        ]
+      },
+      {
+        id: "observability",
+        label: "Observability",
+        subtitle: "bridge skill",
+        category: "bridge",
+        layer: "skills",
+        x: 83,
+        y: 72,
+        size: 10,
+        kicker: "Bridge skill",
+        blurb: "AI teams are discovering that debugging agents without traces is a losing game. Observability is now part of the high-value stack.",
+        scores: { fit: 68, demand: 90, comp: 88, scarcity: 82 },
+        bullets: [
+          "Learn traces, latency/cost breakdowns, tool-path inspection, and regression monitoring.",
+          "This pairs extremely well with your deterministic mindset."
+        ]
+      },
+      {
+        id: "orchestration",
+        label: "Agent orchestration",
+        subtitle: "bridge skill",
+        category: "bridge",
+        layer: "skills",
+        x: 69,
+        y: 74,
+        size: 10,
+        kicker: "Bridge skill",
+        blurb: "This pulls you into the applied-AI and forward-deployed market. The key is not fancy frameworks - it is controlled workflows, good state handling, and clear decision boundaries.",
+        scores: { fit: 72, demand: 91, comp: 87, scarcity: 76 },
+        bullets: [
+          "Focus on tool use, routing, fallback logic, state, and human escalation.",
+          "Use frameworks as implementation details, not identity."
+        ]
+      },
+      {
+        id: "retrieval",
+        label: "Hybrid retrieval",
+        subtitle: "bridge skill",
+        category: "bridge",
+        layer: "skills",
+        x: 80,
+        y: 63,
+        size: 9,
+        kicker: "Bridge skill",
+        blurb: "KG plus embeddings plus rules is one of the most commercially useful combinations you can own.",
+        scores: { fit: 84, demand: 84, comp: 82, scarcity: 77 },
+        bullets: [
+          "This is where your current graph background becomes immediately product-relevant.",
+          "Think retrieval quality, grounding, ranking, and structured fallback."
+        ]
+      },
+      {
+        id: "cloud-api",
+        label: "Cloud and API integration",
+        subtitle: "bridge skill",
+        category: "bridge",
+        layer: "skills",
+        x: 61,
+        y: 71,
+        size: 9,
+        kicker: "Bridge skill",
+        blurb: "This is what lets employers see you as someone who can ship, not just model.",
+        scores: { fit: 62, demand: 89, comp: 80, scarcity: 58 },
+        bullets: [
+          "Enough AWS, containers, APIs, and service wiring to deploy real workflows is enough.",
+          "You do not need to become an infra maximalist."
+        ]
+      },
+      {
+        id: "highest-value",
+        label: "Structured AI reliability",
+        subtitle: "highest-value destination",
+        category: "target",
+        layer: "skills",
+        x: 86,
+        y: 84,
+        size: 18,
+        labelSide: "top",
+        kicker: "Highest-value destination",
+        blurb: "This is the sweet spot: structured knowledge depth plus production AI leverage. Very few people can genuinely do both. That scarcity is where the strongest comp and demand live.",
+        scores: { fit: 86, demand: 94, comp: 94, scarcity: 93 },
+        bullets: [
+          "This is the identity to aim for: not pure ontology, not generic AI engineer.",
+          "Think: reliable agents, measurable quality, grounded retrieval, and enterprise trust.",
+          "This is the zone most likely to make companies seek you out instead of merely considering you."
+        ]
+      },
+      {
+        id: "kg-agent",
+        label: "KG + agents builder",
+        subtitle: "highest-value role cluster",
+        category: "target",
+        layer: "roles",
+        x: 81,
+        y: 79,
+        size: 15,
+        kicker: "Role cluster",
+        blurb: "A strong fit for you over the next 12-24 months. These roles combine knowledge layers, retrieval, agent systems, and enterprise workflow design.",
+        scores: { fit: 88, demand: 86, comp: 88, scarcity: 87 },
+        bullets: [
+          "Best role titles: Applied AI Engineer, Knowledge Engineer, AI Systems Engineer, Agent Reliability Engineer.",
+          "Best sectors: enterprise AI, life sciences, manufacturing, compliance, internal AI tooling."
+        ]
+      },
+      {
+        id: "agent-reliability",
+        label: "Agent reliability / evals",
+        subtitle: "highest-value role cluster",
+        category: "target",
+        layer: "roles",
+        x: 71,
+        y: 87,
+        size: 16,
+        labelSide: "top",
+        kicker: "Role cluster",
+        blurb: "This is one of the hottest high-value lanes in the market. It rewards judgment, benchmarking discipline, and production realism more than raw hype.",
+        scores: { fit: 80, demand: 95, comp: 93, scarcity: 89 },
+        bullets: [
+          "If you add evals and observability, this becomes a very credible target.",
+          "This lane is especially attractive because it is hard to fake."
+        ]
+      },
+      {
+        id: "applied-ai",
+        label: "Applied AI engineer",
+        subtitle: "high-value role cluster",
+        category: "role",
+        layer: "roles",
+        x: 49,
+        y: 82,
+        size: 14,
+        kicker: "Role cluster",
+        blurb: "Huge market demand and strong compensation, but more crowded than the structured-AI corner. Your advantage is to enter this lane with a semantic moat.",
+        scores: { fit: 73, demand: 94, comp: 90, scarcity: 66 },
+        bullets: [
+          "Good fit if framed around reliable enterprise AI rather than pure prompting.",
+          "Stronger if paired with structured retrieval, policy layers, or evaluation rigor."
+        ]
+      },
+      {
+        id: "fde",
+        label: "Forward deployed / solutions",
+        subtitle: "high-value role cluster",
+        category: "role",
+        layer: "roles",
+        x: 60,
+        y: 78,
+        size: 13,
+        kicker: "Role cluster",
+        blurb: "This lane pays well because companies need people who can solve customer problems with real systems, not slides. Your judgment could fit it well if you become stronger on deployment and customer-facing explanation.",
+        scores: { fit: 71, demand: 90, comp: 89, scarcity: 73 },
+        bullets: [
+          "Especially good for companies like Anthropic-style Applied AI teams, enterprise AI platforms, and startups.",
+          "Needs stronger delivery confidence and polished communication of architecture tradeoffs."
+        ]
+      },
+      {
+        id: "domain-kg",
+        label: "Domain KG specialist",
+        subtitle: "good-value role cluster",
+        category: "role",
+        layer: "roles",
+        x: 82,
+        y: 63,
+        size: 13,
+        kicker: "Role cluster",
+        blurb: "This is a strong and realistic lane in healthcare, pharma, industrial AI, and insurance. It pays better when it is tied to search, analytics, or AI product surfaces.",
+        scores: { fit: 90, demand: 75, comp: 79, scarcity: 81 },
+        bullets: [
+          "This is a stable and respected market niche.",
+          "The ceiling rises once the role includes LLM grounding, semantic search, or decision support."
+        ]
+      },
+      {
+        id: "pure-ontologist",
+        label: "Pure Ontologist",
+        subtitle: "low-value local maximum",
+        category: "trap",
+        layer: "roles",
+        x: 84,
+        y: 31,
+        size: 13,
+        labelSide: "top",
+        kicker: "Low-value local maximum",
+        blurb: "Good intellectual fit, but this is where you risk being under-marketed and underpaid relative to your upside. The problem is not the skill. The problem is staying too narrow.",
+        scores: { fit: 95, demand: 56, comp: 54, scarcity: 71 },
+        bullets: [
+          "If your title freezes here, companies may miss the broader system-builder you can become.",
+          "Keep ontology as the backbone, not the final box."
+        ]
+      },
+      {
+        id: "prompt-engineer",
+        label: "Prompt Engineer",
+        subtitle: "crowded and fragile",
+        category: "trap",
+        layer: "roles",
+        x: 28,
+        y: 53,
+        size: 12,
+        kicker: "Low-value local maximum",
+        blurb: "Still searchable, but weak as a long-term identity. Too many people can claim it, and the market increasingly expects stronger systems, evals, or domain depth behind it.",
+        scores: { fit: 42, demand: 68, comp: 58, scarcity: 26 },
+        bullets: [
+          "Use prompting as a tool, not a title.",
+          "The market is shifting toward builders who can evaluate and operationalize systems end to end."
+        ]
+      }
+    ];
+
+    const edges = [
+      { from: "you", to: "highest-value", category: "path", primary: true, color: palette.target },
+      { from: "you", to: "evals", category: "path", color: palette.bridge },
+      { from: "you", to: "orchestration", category: "path", color: palette.bridge },
+      { from: "you", to: "retrieval", category: "path", color: palette.bridge },
+      { from: "you", to: "cloud-api", category: "path", color: palette.bridge },
+      { from: "you", to: "observability", category: "path", color: palette.bridge },
+      { from: "evals", to: "highest-value", category: "path", color: palette.bridge },
+      { from: "observability", to: "highest-value", category: "path", color: palette.bridge },
+      { from: "orchestration", to: "highest-value", category: "path", color: palette.bridge },
+      { from: "retrieval", to: "highest-value", category: "path", color: palette.bridge },
+      { from: "highest-value", to: "agent-reliability", category: "role-link", color: palette.target },
+      { from: "highest-value", to: "kg-agent", category: "role-link", color: palette.target },
+      { from: "highest-value", to: "fde", category: "role-link", color: palette.role },
+      { from: "you", to: "domain-kg", category: "role-link", color: palette.role },
+      { from: "ontologies", to: "pure-ontologist", category: "warning", color: palette.trap },
+      { from: "applied-ai", to: "prompt-engineer", category: "warning", color: palette.trap }
+    ];
+
+    let activeFilter = "all";
+    let activeNode = "you";
+
+    function makeSVG(tag, attrs = {}) {
+      const el = document.createElementNS("http://www.w3.org/2000/svg", tag);
+      Object.entries(attrs).forEach(([key, value]) => el.setAttribute(key, value));
+      return el;
+    }
+
+    function getNode(id) {
+      return nodes.find(node => node.id === id);
+    }
+
+    function filterAllows(node) {
+      if (activeFilter === "all") return true;
+      if (activeFilter === "skills") return node.layer === "skills";
+      if (activeFilter === "roles") return node.layer === "roles";
+      if (activeFilter === "traps") return node.category === "trap";
+      if (activeFilter === "path") return ["current", "bridge", "target"].includes(node.category);
+      return true;
+    }
+
+    function edgeVisible(edge) {
+      const from = getNode(edge.from);
+      const to = getNode(edge.to);
+      return filterAllows(from) && filterAllows(to);
+    }
+
+    function renderEdges() {
+      edgesLayer.innerHTML = "";
+
+      edges.forEach(edge => {
+        const from = getNode(edge.from);
+        const to = getNode(edge.to);
+        const path = makeSVG("path", {
+          d: curvedPath(from, to),
+          class: `edge ${edge.primary ? "primary" : ""} ${edgeVisible(edge) ? "" : "dimmed"}`,
+          stroke: edge.color
+        });
+        edgesLayer.appendChild(path);
+      });
+    }
+
+    function curvedPath(from, to) {
+      const x1 = plotX(from.x);
+      const y1 = plotY(from.y);
+      const x2 = plotX(to.x);
+      const y2 = plotY(to.y);
+      const dx = (x2 - x1) * 0.45;
+      const dy = Math.max(22, Math.abs(y2 - y1) * 0.16);
+      return `M ${x1} ${y1} C ${x1 + dx} ${y1 - dy}, ${x2 - dx} ${y2 + dy}, ${x2} ${y2}`;
+    }
+
+    function renderNodes() {
+      nodesLayer.innerHTML = "";
+
+      nodes.forEach(node => {
+        const color = palette[node.category];
+        const labelSide = node.labelSide === "top" ? "top" : "bottom";
+        const titleY = labelSide === "top" ? -(node.size + 18) : node.size + 24;
+        const subtitleY = labelSide === "top" ? -(node.size + 4) : node.size + 38;
+        const showLabel = showAllLabels || keyNodeIds.has(node.id);
+        const group = makeSVG("g", {
+          class: `node ${filterAllows(node) ? "" : "dimmed"} ${node.id === activeNode ? "active" : ""} ${showLabel ? "show-label" : ""} ${showAllLabels ? "show-subtitle" : ""}`,
+          transform: `translate(${plotX(node.x)} ${plotY(node.y)})`,
+          "data-id": node.id
+        });
+
+        const halo = makeSVG("circle", {
+          r: node.size + 10,
+          fill: node.category === "target" ? "rgba(198,77,47,0.18)" : "rgba(20,33,43,0.10)",
+          class: "halo"
+        });
+
+        const outer = makeSVG("circle", {
+          r: node.size + 3,
+          fill: "rgba(255,255,255,0.88)",
+          stroke: color,
+          "stroke-width": node.id === "highest-value" || node.id === "you" ? 3.4 : 2.2
+        });
+
+        const inner = makeSVG("circle", {
+          r: node.size,
+          fill: color,
+          filter: node.category === "target" ? "url(#softGlow)" : ""
+        });
+
+        const title = makeSVG("text", {
+          class: "node-title",
+          x: 0,
+          y: titleY
+        });
+        title.textContent = node.label;
+
+        const subtitle = makeSVG("text", {
+          class: "node-subtitle",
+          x: 0,
+          y: subtitleY
+        });
+        subtitle.textContent = node.subtitle;
+
+        group.appendChild(halo);
+        group.appendChild(outer);
+        group.appendChild(inner);
+        group.appendChild(title);
+        group.appendChild(subtitle);
+
+        group.addEventListener("mouseenter", () => {
+          group.classList.add("hovered");
+          showTooltip(group, node);
+        });
+        group.addEventListener("mouseleave", () => {
+          group.classList.remove("hovered");
+          hideTooltip();
+        });
+        group.addEventListener("click", () => {
+          activeNode = node.id;
+          updatePanel(node);
+          renderNodes();
+          renderEdges();
+        });
+
+        nodesLayer.appendChild(group);
+      });
+    }
+
+    function showTooltip(target, node) {
+      const rect = target.getBoundingClientRect();
+      tooltip.innerHTML = `<strong>${node.label}</strong><br>${node.subtitle}`;
+      tooltip.style.left = `${rect.left + rect.width / 2}px`;
+      tooltip.style.top = `${rect.top}px`;
+      tooltip.classList.add("visible");
+    }
+
+    function hideTooltip() {
+      tooltip.classList.remove("visible");
+    }
+
+    function updatePanel(node) {
+      panelKicker.textContent = node.kicker;
+      panelTitle.textContent = node.label;
+      panelBlurb.textContent = node.blurb;
+
+      panelList.innerHTML = "";
+      node.bullets.forEach(item => {
+        const li = document.createElement("li");
+        li.textContent = item;
+        panelList.appendChild(li);
+      });
+
+      const scoreColors = {
+        fit: ["#0b7a75", "#16a098"],
+        demand: ["#2d5f94", "#4b86c1"],
+        comp: ["#c64d2f", "#df7b34"],
+        scarcity: ["#744c0d", "#d28718"]
+      };
+
+      scoreGrid.innerHTML = "";
+      Object.entries(node.scores).forEach(([key, value]) => {
+        const row = document.createElement("div");
+        row.className = "score-row";
+        row.innerHTML = `
+          <label>${labelize(key)}</label>
+          <div class="track">
+            <div class="fill" style="--fillA:${scoreColors[key][0]}; --fillB:${scoreColors[key][1]}; width:${value}%"></div>
+          </div>
+          <strong>${value}</strong>
+        `;
+        scoreGrid.appendChild(row);
+      });
+    }
+
+    function labelize(key) {
+      const labels = {
+        fit: "Your fit",
+        demand: "Demand",
+        comp: "Comp ceiling",
+        scarcity: "Scarcity"
+      };
+      return labels[key] || key;
+    }
+
+    toolbar.addEventListener("click", event => {
+      const button = event.target.closest("button");
+      if (!button || button === labelsToggle) return;
+
+      activeFilter = button.dataset.filter;
+      [...toolbar.querySelectorAll("button[data-filter]")].forEach(el => {
+        el.classList.toggle("active", el === button);
+      });
+
+      if (!filterAllows(getNode(activeNode))) {
+        const fallback = nodes.find(node => filterAllows(node));
+        activeNode = fallback ? fallback.id : "you";
+      }
+
+      renderEdges();
+      renderNodes();
+      updatePanel(getNode(activeNode));
+    });
+
+    labelsToggle.addEventListener("click", () => {
+      showAllLabels = !showAllLabels;
+      labelsToggle.textContent = showAllLabels ? "Hide extra labels" : "Show all labels";
+      labelsToggle.classList.toggle("active", showAllLabels);
+      renderNodes();
+    });
+
+    renderEdges();
+    renderNodes();
+    updatePanel(getNode(activeNode));
+  </script>
+</body>
+</html>
