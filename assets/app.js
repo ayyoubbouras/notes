@@ -1,88 +1,100 @@
 const entries = [
   {
-    id: "structure-ai",
-    type: "essay",
-    date: "April 2026",
-    title: "Why structure still matters in AI systems",
-    summary: "A working argument for why ontologies, graphs, and policy layers are not old artifacts from a previous AI era, but active components of reliable modern systems.",
-    tags: ["knowledge graphs", "ontology", "reliable AI"],
+    id: "profile-core",
+    type: "profile",
+    date: "LinkedIn profile",
+    title: "Knowledge, AI, and structured systems",
+    summary: "A profile centered on abstract and open-ended problems, systems thinking, and the organization of messy information into usable frameworks.",
+    tags: ["knowledge", "AI", "structured systems", "semantic technologies"],
     mode: "dialog",
     body: [
-      "A lot of AI discussion still assumes that better models eventually dissolve the need for explicit structure. I think the opposite is closer to the truth in enterprise settings. As systems move from demonstrations to decisions, structure becomes more important, not less.",
-      "The value of structure is not just that it documents the domain. It changes what the system can do safely. A graph, ontology, or typed policy layer gives the system a way to reuse meaning, constrain behavior, and route uncertainty without pretending the model is more reliable than it is.",
-      "That is why I keep coming back to the same question: not how to make models sound smarter, but how to make intelligent systems more legible under pressure."
+      "I’m drawn to abstract and open-ended problems, where defining the right questions is just as important as finding the answers.",
+      "I enjoy working through complexity using systems and analogical thinking, connecting ideas across domains to better understand and solve challenges.",
+      "I’m particularly interested in the intersection of knowledge, AI, and structured systems, and in how messy, unstructured information can be organized into frameworks that support clearer thinking and more effective problem-solving."
     ]
   },
   {
-    id: "deterministic-scaffolding",
-    type: "essay",
-    date: "April 2026",
-    title: "Deterministic layers inside probabilistic workflows",
-    summary: "Notes on why I’m increasingly interested in agents that do not make the final call everywhere, but operate inside systems with clearer boundaries and escalation paths.",
-    tags: ["agents", "determinism", "workflow design"],
+    id: "amazon-ontology",
+    type: "profile",
+    date: "Current role",
+    title: "Ontology-driven systems at Amazon",
+    summary: "Work centered on large-scale product knowledge modeling, validation workflows, and LLM-powered tools that assist in schema creation, validation, and request triage.",
+    tags: ["Amazon", "ontologies", "validation", "AI agents"],
     mode: "dialog",
     body: [
-      "I do not think the interesting future is a model deciding everything on its own. The more useful pattern is often the opposite: let the model contribute where ambiguity is real, but place deterministic layers around classification, routing, eligibility, policy, and final authority.",
-      "This is not an anti-model stance. It is a systems stance. Once you care about governance, repeatability, trust, and debugging, unconstrained model freedom stops looking impressive and starts looking expensive.",
-      "The question becomes architectural: where should intelligence stay flexible, and where should it be made explicit? That boundary is one of the most important design choices in applied AI."
+      "At Amazon, I contribute to the development and evaluation of ontology-driven systems supporting large-scale product knowledge modeling.",
+      "The work includes designing and implementing validation workflows to improve the quality and consistency of schemas used in product data models.",
+      "It also includes supporting LLM-powered tools and AI agents that assist in schema creation, validation, and request triage, while analyzing the limitations of automated schema generation systems."
     ]
   },
   {
-    id: "career-opinion",
+    id: "llm-trust",
+    type: "post",
+    date: "LinkedIn post",
+    title: "We trust LLMs too much",
+    summary: "If reasoning is the issue, maybe the problem is not only the model, but how we structure thinking for it.",
+    tags: ["LLMs", "reasoning", "graph-based thinking"],
+    mode: "dialog",
+    body: [
+      "We have started treating LLMs as if they were deterministic systems, like machines that can reliably resolve complex problems, even problems humans themselves struggle to solve.",
+      "But in practice we feed them unstructured knowledge, fragmented context, and linear instructions, then expect human-like reasoning outcomes.",
+      "That is why I keep coming back to better representations of logic: reasoning maps, graph-based thinking, and interconnected decisions that guide how the model thinks, not only what it sees."
+    ]
+  },
+  {
+    id: "llm-limits",
+    type: "post",
+    date: "LinkedIn post",
+    title: "The limits are structural, not cosmetic",
+    summary: "Hallucination, context compression, reasoning degradation, retrieval fragility, and multimodal misalignment point to architectural limits, not just prompt mistakes.",
+    tags: ["LLM limits", "complexity", "architecture"],
+    mode: "dialog",
+    body: [
+      "One of the papers I highlighted reframes scaling not as an unbounded engineering challenge, but as a process constrained by computational and epistemic limits.",
+      "The recurring failures are familiar: hallucination, context compression, reasoning degradation, retrieval fragility, and multimodal misalignment.",
+      "For me, the important conclusion is that not every failure is a prompt problem. Some are structural, and they push us toward architectures that are more explicit about scope, retrieval, and control."
+    ]
+  },
+  {
+    id: "systems-thinking",
     type: "opinion",
-    date: "April 2026",
-    title: "The kind of AI builder I want to become",
-    summary: "Not a pure researcher and not a generic prompt engineer. I’m more interested in becoming the person who makes intelligent systems trustworthy in real environments.",
-    tags: ["career", "applied AI", "systems thinking"],
+    date: "LinkedIn post",
+    title: "Systems thinking over execution",
+    summary: "Learning systems thinking matters more than only learning to execute faster, especially in an AI-shaped world.",
+    tags: ["systems thinking", "AI", "decision-making"],
     mode: "dialog",
     body: [
-      "The more I look at the market, the clearer my own direction becomes. I do not want to spend my career optimizing only the model side, and I do not want to become another generalist whose value disappears as the tools improve.",
-      "What feels more durable is the intersection: structure, evaluation, orchestration, and reliability. The builder who understands both meaning and operations is still comparatively rare.",
-      "That is the direction this site is meant to document."
+      "One of the shortest ideas I posted is still one of the clearest: learn systems thinking instead of only learning to execute.",
+      "In a world where AI can accelerate execution, the lasting edge is often the ability to see patterns, dependencies, bottlenecks, and second-order effects.",
+      "That is part of why I keep returning to structure, not as bureaucracy, but as a way to reason about complexity."
     ]
   },
   {
-    id: "market-map",
-    type: "experiment",
-    date: "April 2026",
-    title: "Job Market Skill Map",
-    summary: "An interactive map of where my current profile sits, where the premium zone is, and which skills move me closer to it.",
-    tags: ["career map", "market positioning", "interactive"],
-    mode: "link",
-    href: "experiments/job_market_skill_map.html"
-  },
-  {
-    id: "hexagon",
-    type: "experiment",
-    date: "April 2026",
-    title: "Skill Hexagon Comparison",
-    summary: "A six-axis visual comparing my current profile, a production AI operator, and the hybrid profile that seems to command the most value.",
-    tags: ["skills", "visualization", "agentic AI"],
-    mode: "link",
-    href: "experiments/skill_hexagon_comparison.html"
-  },
-  {
-    id: "workflow",
-    type: "experiment",
-    date: "April 2026",
-    title: "AI Agent System Workflow",
-    summary: "A workflow view of how my current skills add value inside an agent system and where orchestration, evals, and production layers enter.",
-    tags: ["workflow", "agents", "structured AI"],
-    mode: "link",
-    href: "experiments/agent_system_skill_workflow.html"
-  },
-  {
-    id: "opinions-over-demos",
-    type: "opinion",
-    date: "April 2026",
-    title: "Why I trust evaluation more than AI demos",
-    summary: "A short opinion on why the real separating skill in applied AI is not building a cool first run, but building systems that stay coherent when the novelty wears off.",
-    tags: ["evaluation", "LLMs", "production"],
+    id: "structured-skills",
+    type: "post",
+    date: "LinkedIn post",
+    title: "Fewer agents, better structured cognition",
+    summary: "A compelling direction is not necessarily more agents, but better organization of skills, memory, and context inside the system.",
+    tags: ["agents", "skills", "context optimization"],
     mode: "dialog",
     body: [
-      "A demo mostly proves that the system worked once. It does not prove that it can keep working when input quality drops, when the domain shifts, when the wrong user asks the wrong question, or when the model behaves differently next week.",
-      "The more I think about applied AI, the more evaluation feels like the real dividing line between clever and useful.",
-      "If I had to pick one growth area with the highest practical return right now, it would be building better judgment around measurement."
+      "I highlighted work showing that many multi-agent pipelines can be compiled into a single agent with a structured skill library.",
+      "What stayed with me is the broader direction: not scaling by adding more agents that communicate through the context window, but optimizing how a system manages and structures its context.",
+      "Hierarchical skills, semantic clustering, and other context-organization mechanisms feel like a more durable path than multiplying agents without stronger internal structure."
+    ]
+  },
+  {
+    id: "user-perspective",
+    type: "opinion",
+    date: "LinkedIn profile",
+    title: "Building with user perspective",
+    summary: "Turning ideas into practical solutions means keeping empathy and real-world experience inside the design process.",
+    tags: ["user perspective", "empathy", "practical solutions"],
+    mode: "dialog",
+    body: [
+      "I’m developing my ability to turn ideas into practical solutions, with a strong focus on user perspective.",
+      "Empathy plays a key role in how I think about building, helping me imagine how concepts translate into real-world experiences.",
+      "That tension between abstract structure and practical usefulness is part of what gives the work its shape."
     ]
   }
 ];
@@ -112,7 +124,7 @@ function renderEntries(filter = "all") {
 
       const action =
         entry.mode === "link"
-          ? `<a class="entry-link" href="${entry.href}">Open experiment</a>`
+          ? `<a class="entry-link" href="${entry.href}">Open link</a>`
           : `<button class="entry-open" type="button" data-id="${entry.id}">Read entry</button>`;
 
       article.innerHTML = `
